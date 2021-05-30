@@ -1,8 +1,12 @@
 ﻿using BLL.Abstract;
 using BLL.Constans;
+using BLL.ValidationRoles.FluentValidation;
+using Core.Aspects.Autofac.Validation;
+using Core.CrossCuttingConcerns.Validation;
 using Core.Utilities.Results;
 using DAL.Abstract;
 using Entity.Concreate;
+using FluentValidation;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -17,12 +21,15 @@ namespace BLL.Concreate.EntityFramework
         {
             _carDal = carDal;
         }
+
+        [ValidationAspect(typeof(CarValidator))]
         public IResult Add(Car car)
         {
-            if (car.CarName.Length < 2)
-            {
-                return new ErrorResult(Messages.CarNameInvalid);
-            }
+            ValidationTool.Validate(new CarValidator(), car);
+            //if (car.CarName.Length < 2)
+            //{
+            //    return new ErrorResult(Messages.CarNameInvalid);
+            //}
             _carDal.Add(car);
             return new SuccessResult(Messages.CarAdded);
         }
@@ -30,7 +37,7 @@ namespace BLL.Concreate.EntityFramework
         public IResult Delete(Car car)
         {
             _carDal.Delete(car);
-           return new SuccessResult(Messages.CarDeleted);
+            return new SuccessResult(Messages.CarDeleted);
         }
 
         public IDataResult<List<Car>> GetAll()

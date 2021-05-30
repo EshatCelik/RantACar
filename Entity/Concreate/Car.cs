@@ -10,6 +10,7 @@ namespace Entity.Concreate
         public int ID { get; set; }
         public string CarName { get; set; }
         public int   BrandID { get; set; }
+        public decimal Price { get; set; }
         //public string Color { get; set; }
 
 
